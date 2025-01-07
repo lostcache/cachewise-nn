@@ -1,6 +1,6 @@
 const std = @import("std");
 const testing = std.testing;
-const MatSys = @import("./matsys.zig").MatSys;
+const MatSys = @import("./mat_sys.zig").MatSys;
 
 pub fn Mat(comptime T: type) type {
     return struct {
