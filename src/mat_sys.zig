@@ -88,6 +88,14 @@ test "init" {
     defer mat_sys.deinit();
     try mat_sys.data.append(42);
     try testing.expectEqual(@as(i32, 42), mat_sys.data.pop());
+    std.debug.print("Testing init ... OK\n", .{});
+}
+
+test "deinit" {
+    const alloc = std.testing.allocator;
+    var mat_sys = try MatSys(i32).init(alloc);
+    mat_sys.deinit();
+    std.debug.print("Testing deinit ... OK\n", .{});
 }
 
 test "add from slice" {
