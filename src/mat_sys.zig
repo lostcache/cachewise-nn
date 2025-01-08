@@ -37,7 +37,7 @@ fn MatSysAligned(comptime T: type) type {
             try self.data.insertSlice(currLen, slice);
         }
 
-        fn validate2DArrayAndReturnDim(arr: *ArrayList(ArrayList(T))) !struct { usize, usize } {
+        fn validate2DArrayAndReturnDim(arr: *const ArrayList(ArrayList(T))) !struct { usize, usize } {
             const n_rows = arr.items.len;
 
             if (n_rows == 0) {
@@ -59,7 +59,7 @@ fn MatSysAligned(comptime T: type) type {
             return .{ n_rows, n_cols };
         }
 
-        pub fn addCopyFrom2DArrayList(self: *Self, arr: *ArrayList(ArrayList(T))) !Mat(T) {
+        pub fn addCopyFrom2DArrayList(self: *Self, arr: *const ArrayList(ArrayList(T))) !Mat(T) {
             const dim = try validate2DArrayAndReturnDim(arr);
 
             const start_index = self.data.items.len;
