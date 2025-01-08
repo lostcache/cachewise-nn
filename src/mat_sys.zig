@@ -79,6 +79,7 @@ test "initCapacity" {
     defer mat_sys.deinit();
     try mat_sys.data.append(42);
     try testing.expectEqual(@as(i32, 42), mat_sys.data.pop());
+    std.debug.print("Testing initCapacity ... OK\n", .{});
 }
 
 test "init" {
@@ -98,6 +99,7 @@ test "add from slice" {
     try testing.expectEqual(@as(i32, 1), mat_sys.data.items[0]);
     try testing.expectEqual(@as(i32, 2), mat_sys.data.items[1]);
     try testing.expectEqual(@as(i32, 3), mat_sys.data.items[2]);
+    std.debug.print("Testing add from slice ... OK\n", .{});
 }
 
 test "add from 2D array list" {
@@ -127,6 +129,7 @@ test "add from 2D array list" {
     try testing.expectEqual(@as(i32, 4), mat.sys_ptr.data.items[3]);
     try testing.expectEqual(@as(i32, 5), mat.sys_ptr.data.items[4]);
     try testing.expectEqual(@as(i32, 6), mat.sys_ptr.data.items[5]);
+    std.debug.print("Testing add from 2D array list ... OK\n", .{});
 }
 
 test "add from 2D array list empty matrix" {
@@ -137,6 +140,7 @@ test "add from 2D array list empty matrix" {
     defer arr.deinit();
     const mat = mat_sys.addCopyFrom2DArrayList(&arr);
     try testing.expectError(error.EmptyMatrix, mat);
+    std.debug.print("Testing add from 2D array list empty matrix ... OK\n", .{});
 }
 
 test "add from 2D array list empty col" {
@@ -148,6 +152,7 @@ test "add from 2D array list empty col" {
     try arr.append(ArrayList(i32).init(alloc));
     const mat = mat_sys.addCopyFrom2DArrayList(&arr);
     try testing.expectError(error.EmptyCol, mat);
+    std.debug.print("Testing add from 2D array list empty col ... OK\n", .{});
 }
 
 test "add from 2D array list inconsistent cols" {

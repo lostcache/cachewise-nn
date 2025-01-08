@@ -33,4 +33,5 @@ test "init Mat" {
     try testing.expectEqual(mat.n_rows, 3);
     try testing.expectEqual(mat.n_cols, 3);
     try testing.expectEqual(mat.start_index, 0);
+    std.debug.print("Testing init ... OK\n", .{});
 }
