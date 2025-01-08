@@ -70,6 +70,24 @@ fn MatSysAligned(comptime T: type) type {
 
             return Mat(T).init(self, start_index, dim[0], dim[1]);
         }
+
+        // TODO: still copied the owned slice
+        // now need to deinit the passed array but still performs a copy
+        // not even sure how is this any useful.
+        // might just remove this function, honestly dunno.
+        pub fn addTransferFrom2DArrayList(self: *Self, arr: *ArrayList(ArrayList(T))) !Mat(T) {
+            const dim = try validate2DArrayAndReturnDim(arr);
+
+            const start_index = self.data.items.len;
+
+            for (arr.items) |*row| {
+                const owned_row = try row.toOwnedSlice();
+                defer arr.allocator.free(owned_row);
+                try self.addFromSlice(owned_row);
+            }
+
+            return Mat(T).init(self, start_index, dim[0], dim[1]);
+        }
     };
 }
 
@@ -179,4 +197,36 @@ test "add from 2D array list inconsistent cols" {
     };
     const mat = mat_sys.addCopyFrom2DArrayList(&arr);
     try testing.expectError(error.InconsistentCols, mat);
+    std.debug.print("Testing add from 2D array list inconsistent cols ... OK\n", .{});
+}
+
+test "add transfer from 2D array list" {
+    const alloc = std.testing.allocator;
+
+    var mat_sys = try MatSys(i32).init(alloc);
+    defer mat_sys.deinit();
+
+    var arr = ArrayList(ArrayList(i32)).init(alloc);
+    defer arr.deinit();
+
+    try arr.append(ArrayList(i32).init(alloc));
+    try arr.items[0].append(1);
+    try arr.items[0].append(2);
+    try arr.items[0].append(3);
+
+    try arr.append(ArrayList(i32).init(alloc));
+    try arr.items[1].append(4);
+    try arr.items[1].append(5);
+    try arr.items[1].append(6);
+    const mat = try mat_sys.addTransferFrom2DArrayList(&arr);
+    try testing.expectEqual(mat.n_rows, 2);
+    try testing.expectEqual(mat.n_cols, 3);
+    try testing.expectEqual(mat.start_index, 0);
+    try testing.expectEqual(@as(i32, 1), mat.sys_ptr.data.items[0]);
+    try testing.expectEqual(@as(i32, 2), mat.sys_ptr.data.items[1]);
+    try testing.expectEqual(@as(i32, 3), mat.sys_ptr.data.items[2]);
+    try testing.expectEqual(@as(i32, 4), mat.sys_ptr.data.items[3]);
+    try testing.expectEqual(@as(i32, 5), mat.sys_ptr.data.items[4]);
+    try testing.expectEqual(@as(i32, 6), mat.sys_ptr.data.items[5]);
+    std.debug.print("Testing add transfer from 2D array list ... OK\n", .{});
 }
