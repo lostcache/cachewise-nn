@@ -14,7 +14,7 @@ pub fn Mat(comptime T: type) type {
 
         n_cols: usize,
 
-        pub fn init(sys_ptr: *MatSys(T), start_index: usize, n_cols: usize, n_rows: usize) Self {
+        pub fn init(sys_ptr: *MatSys(T), start_index: usize, n_rows: usize, n_cols: usize) Self {
             return Self{
                 .sys_ptr = sys_ptr,
                 .start_index = start_index,
@@ -27,9 +27,9 @@ pub fn Mat(comptime T: type) type {
 
 test "init Mat" {
     const alloc = std.testing.allocator;
-    var matSys = try MatSys(i32).init(alloc);
-    defer matSys.deinit();
-    const mat = Mat(i32).init(&matSys, 0, 3, 3);
+    var mat_sys = try MatSys(i32).init(alloc);
+    defer mat_sys.deinit();
+    const mat = Mat(i32).init(&mat_sys, 0, 3, 3);
     try testing.expectEqual(mat.n_rows, 3);
     try testing.expectEqual(mat.n_cols, 3);
     try testing.expectEqual(mat.start_index, 0);

@@ -40,27 +40,27 @@ fn MatSysAligned(comptime T: type) type {
 
 test "initCapacity" {
     const alloc = std.testing.allocator;
-    var matSys = try MatSys(i32).initCapacity(alloc, 10);
-    defer matSys.deinit();
-    try matSys.data.append(42);
-    try testing.expectEqual(@as(i32, 42), matSys.data.pop());
+    var mat_sys = try MatSys(i32).initCapacity(alloc, 10);
+    defer mat_sys.deinit();
+    try mat_sys.data.append(42);
+    try testing.expectEqual(@as(i32, 42), mat_sys.data.pop());
 }
 
 test "init" {
     const alloc = std.testing.allocator;
-    var matSys = try MatSys(i32).init(alloc);
-    defer matSys.deinit();
-    try matSys.data.append(42);
-    try testing.expectEqual(@as(i32, 42), matSys.data.pop());
+    var mat_sys = try MatSys(i32).init(alloc);
+    defer mat_sys.deinit();
+    try mat_sys.data.append(42);
+    try testing.expectEqual(@as(i32, 42), mat_sys.data.pop());
 }
 
 test "add from slice" {
     const alloc = std.testing.allocator;
-    var matSys = try MatSys(i32).init(alloc);
-    defer matSys.deinit();
+    var mat_sys = try MatSys(i32).init(alloc);
+    defer mat_sys.deinit();
     const slice = [_]i32{ 1, 2, 3 };
-    try matSys.addFromSlice(&slice);
-    try testing.expectEqual(@as(i32, 1), matSys.data.items[0]);
-    try testing.expectEqual(@as(i32, 2), matSys.data.items[1]);
-    try testing.expectEqual(@as(i32, 3), matSys.data.items[2]);
+    try mat_sys.addFromSlice(&slice);
+    try testing.expectEqual(@as(i32, 1), mat_sys.data.items[0]);
+    try testing.expectEqual(@as(i32, 2), mat_sys.data.items[1]);
+    try testing.expectEqual(@as(i32, 3), mat_sys.data.items[2]);
 }
